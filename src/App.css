@@ -1,0 +1,162 @@
+/* Global Styles - Clean Blue/White Theme */
+:root {
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --secondary: #e0f2fe;
+  --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+  --card-bg: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #bae6fd;
+  --success: #22c55e;
+  --error: #ef4444;
+}
+
+/* Reset body background */
+body {
+  background: var(--bg-gradient);
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Root container */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Page containers should be full width */
+.page-center {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card styles */
+.cl-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Table styles */
+.cl-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.cl-table th,
+.cl-table td {
+  border: 1px solid var(--border);
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.cl-table thead th {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Button styles */
+.btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+}
+
+.btn.secondary {
+  background: var(--secondary);
+  color: var(--primary);
+  border: 1px solid var(--border);
+}
+
+/* Form elements */
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Bordered table utility */
+.bordered-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bordered-table th,
+.bordered-table td {
+  border: 1px solid var(--border);
+  padding: 12px;
+  text-align: center;
+}
+
+.bordered-table thead th {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.bordered-table tbody tr:nth-child(even) {
+  background: #f0f9ff;
+}
+
+/* Links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f9ff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bae6fd;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0284c7;
+}
