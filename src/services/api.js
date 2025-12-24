@@ -5,12 +5,25 @@
 //   withCredentials: true, // Ensure cookies/session work if needed
 // });
 
+// // export default API;
+
+
+// import axios from "axios";
+
+// const API = axios.create({
+//   baseURL: import.meta.env.VITE_API_URL, // لینک بک‌اند روی Render
+//   withCredentials: true, // Ensure cookies/session work if needed
+// });
+
 // export default API;
+
+
+
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // لینک بک‌اند روی Render
-  withCredentials: true, // Ensure cookies/session work if needed
+  baseURL: import.meta.env.VITE_API_URL + "/api", // ⚡ اضافه شد /api
+  withCredentials: true,
 });
 
 export default API;
