@@ -158,21 +158,32 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [showSplash, setShowSplash] = useState(true);
-  const [fadeOut, setFadeOut] = useState(false);
+  const [logoVisible, setLogoVisible] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const { login, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  // Splash screen timing
+  // Splash & animation sequence
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFadeOut(true);
-      setTimeout(() => {
-        setShowSplash(false);
-      }, 500);
-    }, 1000);
+    // fade in logo (1s)
+    setLogoVisible(true);
 
-    return () => clearTimeout(timer);
+    // fade out logo after showing
+    const fadeOutTimer = setTimeout(() => {
+      setLogoVisible(false);
+    }, 1500);
+
+    // hide splash & show login
+    const showLoginTimer = setTimeout(() => {
+      setShowSplash(false);
+      setShowLogin(true);
+    }, 3000);
+
+    return () => {
+      clearTimeout(fadeOutTimer);
+      clearTimeout(showLoginTimer);
+    };
   }, []);
 
   // Redirect if already logged in
@@ -211,13 +222,13 @@ const Login = () => {
 
   if (showSplash) {
     return (
-      <div style={styles.container}>
+      <div style={styles.splash}>
         <img
           src={cleverLogo}
           alt="Clever Logo"
           style={{
             ...styles.logo,
-            opacity: fadeOut ? 0 : 1,
+            opacity: logoVisible ? 1 : 0,
           }}
         />
       </div>
@@ -226,7 +237,12 @@ const Login = () => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
+      <div
+        style={{
+          ...styles.card,
+          opacity: showLogin ? 1 : 0,
+        }}
+      >
         <h1 style={styles.title}>Login</h1>
         <form onSubmit={handleSubmit} style={styles.form}>
           {error && <div style={styles.error}>{error}</div>}
@@ -262,16 +278,26 @@ const Login = () => {
 };
 
 const styles = {
+  splash: {
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "#000",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logo: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    transition: "opacity 1.5s ease",
+  },
   container: {
     minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f5f5f5",
-  },
-  logo: {
-    width: "200px",
-    transition: "opacity 0.5s ease",
   },
   card: {
     backgroundColor: "white",
@@ -280,7 +306,7 @@ const styles = {
     boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
     width: "100%",
     maxWidth: "400px",
-    animation: "fadeIn 0.5s ease",
+    transition: "opacity 0.5s ease",
   },
   title: {
     textAlign: "center",
