@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { checklistQuestions, getChecklistTypeName } from "../data/checklistQuestions";
 import SupervisorSignature from "../components/SupervisorSignature.jsx";
 import { exportFullChecklist } from "../utils/excelExport";
+import API from "../services/api.js";
 
 const ChecklistPage = () => {
   const { type } = useParams();
@@ -50,7 +51,9 @@ const ChecklistPage = () => {
       if (image) data.append("image", image);
       if (signature) data.append("supervisorSignature", signature);
 
-      await axios.post("http://localhost:5000/api/checklists", data);
+      // await axios.post("http://localhost:5000/api/checklists", data);
+      await API.post("/checklists", data);
+
 
       alert("✅ چک‌لیست با موفقیت ذخیره شد");
       setFormData([]);
