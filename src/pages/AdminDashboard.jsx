@@ -1,4 +1,3 @@
-//15/9
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-jalaali";
@@ -468,4 +467,416 @@ const AdminDashboard = () => {
                 <div style={styles.topBlue}>
                   <div style={styles.topRow}>
                     <div style={styles.topCol}>
-                      <label style={styles.label}>نوع فعالیت (Activity Type)</
+                      <label style={styles.label}>نوع فعالیت (Activity Type)</label>
+                      <select
+                        value={selectedType}
+                        onChange={(e) => setSelectedType(e.target.value)}
+                        style={styles.select}
+                      >
+                        <option value="">-- انتخاب --</option>
+                        {typeOptions.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                      </select>
+                    </div>
+
+                    <div style={styles.topCol}>
+                      <label style={styles.label}>بخش (Department)</label>
+                      <select
+                        value={selectedDepartment}
+                        onChange={(e) => setSelectedDepartment(e.target.value)}
+                        style={styles.select}
+                        disabled={!selectedType} // disabled until type chosen
+                      >
+                        <option value="">-- انتخاب بخش --</option>
+                        {Object.keys(unitsHierarchy).map((d) => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div style={styles.topCol}>
+  <label style={styles.label}>زیرواحد (SubUnit)</label>
+  <select
+    value={selectedSubUnit}
+    onChange={(e) => setSelectedSubUnit(e.target.value)}
+    style={styles.select}
+    disabled={!selectedType || !selectedDepartment}
+  >
+    <option value="">-- انتخاب زیرواحد --</option>
+    {subUnits.map((s) => <option key={s} value={s}>{s}</option>)}
+  </select>
+</div>
+
+{selectedType === "new" && (
+  <div style={styles.whiteArea}>
+    <div style={styles.whiteTopControls}>
+      <div style={{ display: "flex", gap: 8 }}>
+        <button style={styles.primaryAction} onClick={onAddRow}>جدید</button>
+        <button style={styles.saveBtn} onClick={saveAllRows} disabled={savingAll || ncRows.length === 0}>
+          {savingAll ? "در حال ذخیره..." : "ذخیره"}
+        </button>
+      </div>
+      <div style={{ color: "#666", fontSize: 12 }}>واحد و زیرواحد باید انتخاب شود.</div>
+    </div>
+
+    {/* Rows area */}
+    <div style={{ marginTop: 12 }}>
+      {ncRows.length === 0 ? (
+        <div style={{ padding: 12, color: "#666" }}>برای ثبت چند مورد، روی «جدید» کلیک کنید.</div>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={styles.table} className="bordered-table">
+            <thead>
+              <tr>
+                <th style={styles.cell}>ردیف</th>
+                <th style={styles.cell}>S *</th>
+                <th style={styles.cell}>شرح *</th>
+                <th style={styles.cell}>تصاویر قبل (حداکثر ۴)</th>
+                <th style={styles.cell}>اقدامات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ncRows.map((row, idx) => (
+                <tr key={row.id}>
+                  <td style={{ ...styles.cell, width: 60 }}>{idx + 1}</td>
+
+                  <td style={{ ...styles.cell, minWidth: 140 }}>
+                    <select value={row.s} onChange={(e) => onRowChange(row.id, { s: e.target.value })} style={styles.selectSmall}>
+                      <option value="">-- انتخاب S --</option>
+                      <option value="S1">S1</option>
+                      <option value="S2">S2</option>
+                      <option value="S3">S3</option>
+                      <option value="S4">S4</option>
+                      <option value="S5">S5</option>
+                      <option value="Safety">Safety</option>
+                    </select>
+                  </td>
+
+                  <td style={{ ...styles.cell, minWidth: 300 }}>
+                    <input
+                      value={row.description}
+                      onChange={(e) => onRowChange(row.id, { description: e.target.value })}
+                      placeholder="شرح را وارد کنید..."
+                      style={styles.input}
+                    />
+                  </td>
+
+                  <td style={{ ...styles.cell, minWidth: 260 }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => onRowPickFiles(row.id, e.target.files)}
+                      style={styles.fileInput}
+                      ref={(el) => (fileInputsRef.current[row.id] = el)}
+                    />
+                    {row.beforeFiles && row.beforeFiles.length > 0 && (
+                      <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        {row.beforeFiles.map((f, fi) => (
+                          <div key={fi} style={styles.previewBox}>
+                            <span style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", display: "block" }}>{f.name}</span>
+                            <button onClick={() => onRowRemoveFile(row.id, fi)} style={styles.removeFileBtn}>✕</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+
+                  <td style={{ ...styles.cell, minWidth: 120 }}>
+                    <button style={styles.removeRowBtn} onClick={() => onRemoveRow(row.id)}>حذف ردیف</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+{selectedType === "view" && (
+  <div style={styles.whiteArea}>
+    <div style={styles.filterRow}>
+      <div>
+        <label style={styles.label}>سال</label>
+        <select value={selectedJYear} onChange={(e) => setSelectedJYear(e.target.value)} style={styles.select}>
+          {yearOptions.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label style={styles.label}>ماه</label>
+        <select value={selectedJMonth} onChange={(e) => setSelectedJMonth(e.target.value)} style={styles.select}>
+          {jalaliMonths.map((m, idx) => (
+            <option key={m} value={idx + 1}>{m}</option>
+          ))}
+        </select>
+      </div>
+      <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+        <button
+          style={styles.actionBtn}
+          onClick={() => {
+            if (!selectedDepartment || !selectedSubUnit) {
+              alert("واحد و زیرواحد را انتخاب کنید.");
+              return;
+            }
+            setViewConfirmed(true);
+            fetchNonConformities();
+          }}
+          disabled={!selectedDepartment || !selectedSubUnit}
+        >
+          تایید
+        </button>
+        <button
+          style={styles.exportBtn}
+          onClick={() => {
+            if (!selectedDepartment || !selectedSubUnit) {
+              alert("واحد و زیرواحد را انتخاب کنید.");
+              return;
+            }
+            const { exportMonth } = getMonthRangeGregorian(selectedJYear, selectedJMonth);
+            const url = `${API.defaults.baseURL}/nonconformities/export/${encodeURIComponent(selectedDepartment)}/${encodeURIComponent(selectedSubUnit)}/${encodeURIComponent(exportMonth)}`;
+            window.open(url, "_blank");
+          }}
+        >
+          دانلود با فرمت اکسل
+        </button>
+      </div>
+    </div>
+
+    <div style={styles.scoreStrip}>
+      <div>نمره سرپرست: <strong>{viewScore}%</strong></div>
+      <div>کل موارد: {ncList.length}</div>
+      <div>رفع شده: {ncList.filter((i) => i.status === "Fixed").length}</div>
+      <div>رفع نشده/ناقص: {ncList.filter((i) => i.status !== "Fixed").length}</div>
+    </div>
+
+    {loadingList ? (
+      <div>در حال بارگذاری...</div>
+    ) : !viewConfirmed ? (
+      <div style={{ color: "#555" }}>برای مشاهده، ماه و زیرواحد را انتخاب و روی «تایید» بزنید.</div>
+    ) : ncList.length === 0 ? (
+      <div>موردی یافت نشد.</div>
+    ) : (
+      <div style={{ overflowX: "auto" }}>
+        <table style={styles.table} className="bordered-table">
+          <thead>
+            <tr>
+              <th style={styles.cell}>ردیف</th>
+              <th style={styles.cell}>S</th>
+              <th style={styles.cell}>شرح عدم انطباق</th>
+              <th style={styles.cell}>تاریخ مشاهده</th>
+              <th style={styles.cell}>وضعیت</th>
+              <th style={styles.cell}>درصد پیشرفت</th>
+              <th style={styles.cell}>تصویر قبل از اصلاح</th>
+              <th style={styles.cell}>تصویر پس از اصلاح</th>
+              <th style={styles.cell}>توضیحات</th>
+              <th style={styles.cell}>ثبت کننده</th>
+              <th style={styles.cell}>عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ncList.map((it, idx) => {
+              const isEditing = editingId === it._id;
+              const statusLabel =
+                statusOptions.find((s) => s.value === it.status)?.label || it.status || "-";
+              return (
+                <tr key={it._id}>
+                  <td style={styles.cell}>{idx + 1}</td>
+                  <td style={styles.cell}>
+                    {isEditing ? (
+                      <select
+                        value={editDraft.s}
+                        onChange={(e) => setEditDraft({ ...editDraft, s: e.target.value })}
+                        style={styles.selectSmall}
+                      >
+                        <option value="">انتخاب</option>
+                        <option value="S1">S1</option>
+                        <option value="S2">S2</option>
+                        <option value="S3">S3</option>
+                        <option value="S4">S4</option>
+                        <option value="S5">S5</option>
+                        <option value="Safety">Safety</option>
+                      </select>
+                    ) : (
+                      it.s
+                    )}
+                  </td>
+                  <td style={{ ...styles.cell, minWidth: 240 }}>
+                    {isEditing ? (
+                      <input
+                        value={editDraft.description}
+                        onChange={(e) => setEditDraft({ ...editDraft, description: e.target.value })}
+                        style={styles.input}
+                      />
+                    ) : (
+                      it.description
+                    )}
+                  </td>
+                  <td style={styles.cell}>{it.viewDateJalali || moment(it.date).format("jYYYY/jMM/jDD")}</td>
+                  <td style={styles.cell}>
+                    {isEditing ? (
+                      <select
+                        value={editDraft.status}
+                        onChange={(e) => setEditDraft({ ...editDraft, status: e.target.value })}
+                        style={styles.selectSmall}
+                      >
+                        {statusOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      statusLabel
+                    )}
+                  </td>
+                  <td style={{ ...styles.cell, minWidth: 120 }}>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={editDraft.progress}
+                        onChange={(e) => setEditDraft({ ...editDraft, progress: e.target.value })}
+                        style={styles.input}
+                      />
+                    ) : (
+                      `${it.progress ?? 0}%`
+                    )}
+                  </td>
+                  <td style={{ ...styles.cell, minWidth: 160 }}>
+                    {isEditing ? (
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => setEditFiles(Array.from(e.target.files || []))}
+                          style={styles.fileInput}
+                        />
+                        {(it.beforeImages || []).map((src, i) => (
+                          <a
+                            key={i}
+                            href={`${API.defaults.baseURL}${src}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ marginRight: 6, fontSize: 12 }}
+                          >
+                            تصویر {i + 1}
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      (it.beforeImages || []).slice(0, 2).map((src, i) => (
+                        <a key={i} href={`${API.defaults.baseURL}${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}> نمایش </a>
+                      ))
+                    )}
+                  </td>
+                  <td style={{ ...styles.cell, minWidth: 160 }}>
+                    {(it.afterImages || []).slice(0, 2).map((src, i) => (
+                      <a key={i} href={`${API.defaults.baseURL}${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }} >
+                        نمایش
+                      </a>
+                    ))}
+                  </td>
+                  <td style={{ ...styles.cell, minWidth: 200 }}>
+                    {isEditing ? (
+                      <textarea
+                        value={editDraft.notes}
+                        onChange={(e) => setEditDraft({ ...editDraft, notes: e.target.value })}
+                        style={{ ...styles.input, minHeight: 50 }}
+                      />
+                    ) : (
+                      it.notes || "-"
+                    )}
+                  </td>
+                  <td style={styles.cell}>{it.createdBy || "-"}</td>
+                  <td style={styles.cell}>
+                    {isEditing ? (
+                      <button style={styles.saveBtn} onClick={() => saveEdit(it._id)}>💾 ذخیره</button>
+                    ) : (
+                      <div style={{ display: "flex", gap: 6, flexDirection: "column" }}>
+                        <button style={styles.primaryAction} onClick={() => startEdit(it)}>ویرایش</button>
+                        <button style={styles.delBtn} onClick={() => deleteRow(it._id)}>حذف</button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+)}
+
+                    // ---------- styles ----------
+const menuBtn = (active) => ({
+  display: "block",
+  width: "100%",
+  padding: "0.8rem 1rem",
+  marginBottom: 12,
+  textAlign: "right",
+  background: active ? "#0284c7" : "#f1f5f9",
+  color: active ? "#fff" : "#333",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer",
+  fontWeight: active ? 600 : 400,
+});
+
+const styles = {
+  wrap: { minHeight: "100vh", width: "100%", position: "relative", direction: "rtl", background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%)" },
+  container: { minHeight: "100vh", width: "100%", background: "transparent" },
+  inner: {
+    display: "flex",
+    gap: 24,
+    padding: "24px",
+    width: "100%",
+    maxWidth: 1600,
+    margin: "0 auto",
+    alignItems: "flex-start",
+  },
+  menu: { width: 260, flexShrink: 0, display: "flex", flexDirection: "column", background: "#fff", padding: 16, borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" },
+  badge: { display: "inline-block", background: "#ef4444", color: "#fff", borderRadius: 12, padding: "2px 8px", marginLeft: 8, fontSize: 12 },
+  content: { flex: 1, background: "#fff", padding: 24, borderRadius: 12, minHeight: "calc(100vh - 150px)", boxShadow: "0 4px 20px rgba(0,0,0,0.08)" },
+  title: { marginTop: 0, marginBottom: 16, color: "#0369a1", fontSize: "1.5rem" },
+
+  /* top blue area */
+  topBlue: { background: "#e0f2fe", padding: 16, borderRadius: 10, border: "1px solid #bae6fd" },
+  topRow: { display: "flex", gap: 16, alignItems: "flex-end", flexWrap: "wrap" },
+  topCol: { minWidth: 220 },
+
+  label: { display: "block", marginBottom: 6, color: "#0369a1", fontWeight: 500 },
+  select: { padding: "10px 12px", borderRadius: 8, border: "1px solid #bae6fd", minWidth: 180, background: "#fff" },
+  selectSmall: { padding: "8px 10px", borderRadius: 8, border: "1px solid #bae6fd", minWidth: 120, background: "#fff" },
+
+  /* white area with rows */
+  whiteArea: { background: "#fff", marginTop: 16, padding: 16, borderRadius: 10, border: "1px solid #e0f2fe" },
+  whiteTopControls: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+  filterRow: { display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-end", marginTop: 12 },
+  scoreStrip: { display: "flex", gap: 16, flexWrap: "wrap", background: "#f0f9ff", padding: 16, borderRadius: 10, margin: "16px 0", border: "1px solid #bae6fd" },
+
+  actionBtn: { background: "#e0f2fe", border: "1px solid #bae6fd", padding: "10px 16px", borderRadius: 8, cursor: "pointer", color: "#0369a1", fontWeight: 500 },
+  primaryAction: { background: "#0284c7", color: "#fff", border: "none", padding: "10px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 500 },
+  saveBtn: { background: "#22c55e", color: "#fff", border: "none", padding: "10px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 500 },
+  delBtn: { background: "#ef4444", color: "#fff", border: "none", padding: "8px 12px", borderRadius: 8, cursor: "pointer", fontWeight: 500 },
+
+  table: { width: "100%", borderCollapse: "collapse", textAlign: "left", marginTop: 12 },
+  cell: { border: "1px solid #bae6fd", padding: 10, textAlign: "center", verticalAlign: "middle", background: "#fff" },
+  input: { width: "100%", padding: 10, marginBottom: 0, borderRadius: 8, border: "1px solid #bae6fd" },
+  fileInput: { width: "100%", marginTop: 6 },
+
+  previewBox: { background: "#f0f9ff", padding: 8, borderRadius: 8, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, position: "relative" },
+  removeFileBtn: { background: "#ef4444", color: "#fff", border: "none", padding: "4px 8px", borderRadius: 6, cursor: "pointer", fontWeight: 700 },
+
+  removeRowBtn: { background: "#ef4444", color: "#fff", border: "none", padding: "8px 12px", borderRadius: 8, cursor: "pointer" },
+
+  scoreSummaryCard: { padding: 16, background: "#f0f9ff", borderRadius: 10, minWidth: 180, maxWidth: 300, textAlign: "center", border: "1px solid #bae6fd" },
+  scoreTitle: { fontSize: 13, color: "#0369a1", marginBottom: 8 },
+  scoreNumber: { fontSize: 20, fontWeight: 700, marginTop: 4, color: "#0284c7" },
+
+  exportBtn: { background: "#0284c7", color: "#fff", border: "none", padding: "10px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 500 },
+};
+
+export default AdminDashboard;
