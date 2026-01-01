@@ -822,7 +822,7 @@ const menuBtn = (active) => ({
   border: "none",
   borderRadius: 8,
   cursor: "pointer",
-  fontWeight: active ? 600 : 400,
+  fontWeight: active ? 600 : 400
 });
 
 const styles = {
