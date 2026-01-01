@@ -767,7 +767,7 @@ const AdminDashboard = () => {
                                           (it.beforeImages || []).slice(0, 2).map((src, i) => (
                                             <a key={i} href={`${API.defaults.baseURL}${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}> نمایش </a> ))
 
-                                      ))
+                                      
                                     )}
                                   </td>
                                   <td style={{ ...styles.cell, minWidth: 160 }}>
