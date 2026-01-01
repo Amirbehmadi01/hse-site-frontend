@@ -758,26 +758,34 @@ const AdminDashboard = () => {
                                           onChange={(e) => setEditFiles(Array.from(e.target.files || []))}
                                           style={styles.fileInput}
                                         />
-                                        {(it.beforeImages || []).map((src, i) => (
+                                        /* {(it.beforeImages || []).map((src, i) => (
                                           <a key={i} href={`http://localhost:5000${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6, fontSize: 12 }}>
                                             تصویر {i + 1}
-                                          </a>
+                                          </a> */
+                                          <a key={i}  href={`${API.defaults.baseURL}${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6, fontSize: 12 }}>
+                                             تصویر {i + 1}
+                                           </a>
                                         ))}
                                       </div>
                                     ) : (
-                                      (it.beforeImages || []).slice(0, 2).map((src, i) => (
-                                        <a key={i} href={`http://localhost:5000${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}>
-                                          نمایش
-                                        </a>
+                                      // (it.beforeImages || []).slice(0, 2).map((src, i) => (
+                                      //   <a key={i} href={`http://localhost:5000${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}>
+                                      //     نمایش
+                                      //   </a>
+                                          (it.beforeImages || []).slice(0, 2).map((src, i) => (
+                                            <a key={i} href={`${API.defaults.baseURL}${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}> نمایش </a> ))
+
                                       ))
                                     )}
                                   </td>
                                   <td style={{ ...styles.cell, minWidth: 160 }}>
-                                    {(it.afterImages || []).slice(0, 2).map((src, i) => (
+                                    /* {(it.afterImages || []).slice(0, 2).map((src, i) => (
                                       <a key={i} href={`http://localhost:5000${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }}>
                                         نمایش
                                       </a>
-                                    ))}
+                                    ))} */
+                                    {(it.afterImages || []).slice(0, 2).map((src, i) => (<a key={i} href={`${API.defaults.baseURL}${src}`} target="_blank" rel="noreferrer" style={{ marginRight: 6 }} >
+                                      نمایش </a>))
                                   </td>
                                   <td style={{ ...styles.cell, minWidth: 200 }}>
                                     {isEditing ? (
