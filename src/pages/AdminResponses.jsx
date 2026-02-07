@@ -272,7 +272,7 @@ const AdminResponses = () => {
                                 style={styles.imageLink}
                               >
                                 <img
-                                  src={`http://localhost:5000${img}`}
+                                  src={`${import.meta.env.VITE_API_URL}${img}`}
                                   alt={`Before ${idx + 1}`}
                                   style={styles.thumbnail}
                                 />
@@ -296,7 +296,7 @@ const AdminResponses = () => {
                                 style={styles.imageLink}
                               >
                                 <img
-                                  src={`http://localhost:5000${img}`}
+                                  src={`${import.meta.env.VITE_API_URL}${img}`}
                                   alt={`After ${idx + 1}`}
                                   style={styles.thumbnail}
                                 />
