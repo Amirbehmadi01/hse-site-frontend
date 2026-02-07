@@ -808,8 +808,8 @@ const AdminDashboard = () => {
       </div>
     )}
   </div>
-)}
-
+)} ;
+//////////////////////////////////////////////////////////
                     // ---------- styles ----------
 const menuBtn = (active) => {
   return {
