@@ -811,19 +811,22 @@ const AdminDashboard = () => {
 )}
 
                     // ---------- styles ----------
-const menuBtn = (active) => ({
-  display: "block",
-  width: "100%",
-  padding: "0.8rem 1rem",
-  marginBottom: 12,
-  textAlign: "right",
-  background: active ? "#0284c7" : "#f1f5f9",
-  color: active ? "#fff" : "#333",
-  border: "none",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: active ? 600 : 400
-});
+const menuBtn = (active) => {
+  return {
+    display: "block",
+    width: "100%",
+    padding: "0.8rem 1rem",
+    marginBottom: 12,
+    textAlign: "right",
+    background: active ? "#0284c7" : "#f1f5f9",
+    color: active ? "#fff" : "#333",
+    border: "none",
+    borderRadius: 8,
+    cursor: "pointer",
+    fontWeight: active ? 600 : 400,
+  };
+};
+
 
 const styles = {
   wrap: { minHeight: "100vh", width: "100%", position: "relative", direction: "rtl", background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%)" },
