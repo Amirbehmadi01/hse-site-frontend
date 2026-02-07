@@ -167,7 +167,7 @@ const AdminMonthlyNonConformances = () => {
                           {item.beforeImages?.map((img, idx) => (
                             <img
                               key={idx}
-                              src={`http://localhost:5000${img}`}
+                              src={`${import.meta.env.VITE_API_URL}${img}`}
                               alt={`Before ${idx + 1}`}
                               style={styles.image}
                             />
@@ -179,7 +179,7 @@ const AdminMonthlyNonConformances = () => {
                           {item.afterImages?.map((img, idx) => (
                             <img
                               key={idx}
-                              src={`http://localhost:5000${img}`}
+                              src={`${import.meta.env.VITE_API_URL}${img}`}
                               alt={`After ${idx + 1}`}
                               style={styles.image}
                             />
