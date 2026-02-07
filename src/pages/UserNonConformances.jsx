@@ -518,7 +518,7 @@ const UserNonConformances = () => {
                         {item.beforeImages?.map((img, idx2) => (
                           <img
                             key={idx2}
-                            src={`http://localhost:5000${img}`}
+                            src={`${import.meta.env.VITE_API_URL}${img}`}
                             alt={`Before ${idx2 + 1}`}
                             style={styles.image}
                             onClick={() => window.open(`http://localhost:5000${img}`, "_blank")}
